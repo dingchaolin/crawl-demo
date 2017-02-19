@@ -1,0 +1,17 @@
+{
+  "name": "dcl",
+  "version": "1.0.0",
+  "description": "12",
+  "main": "bjgjj.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "gm": "^1.23.0",
+    "node-tesseract": "^0.2.7",
+    "request": "^2.79.0"
+  }
+}
