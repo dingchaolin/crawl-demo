@@ -92,6 +92,7 @@ request(optionsLogin, function (err0, httpResponse0, body0) {
 // 获取验证图片
 //#####################################
         var urlImg = 'http://www.bjgjj.gov.cn/wsyw/servlet/PicCheckCode1?v='+ new Date();
+        console.log( urlImg )
         var headersImg = {
             "Accept":"image/webp,image/*,*/*;q=0.8",
             "Accept-Encoding":"gzip, deflate, sdch",
@@ -196,7 +197,7 @@ request(optionsLogin, function (err0, httpResponse0, body0) {
                                     // 请求用户信息页
                                     //#################################
                                     var infoUrl = 'http://www.bjgjj.gov.cn/wsyw/wscx/gjj_cx.jsp' + script.trim();
-                                    //console.log(  infoUrl );
+                                    console.log(  "@@@@@@@@@@@@@@@@@@"+infoUrl );
                                     var infoHeaders = {
                                             "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                                             "Accept-Encoding":"gzip, deflate, sdch",
@@ -220,11 +221,13 @@ request(optionsLogin, function (err0, httpResponse0, body0) {
                                         data = iconv.decode(body, 'gb2312');
                                         var $ = cheerio.load( data );
                                         var info = $.text().trim().replace(/\r\n\s+/gi, "  ");
+                                        console.log( info );
                                         var fromStr = '住房公积金个人总账信息';
                                         var endStr = '当前余额 = 上年结转余额';
                                         var start = info.indexOf( fromStr,0 );
                                         var end = info.indexOf( endStr,start );
                                         var countInfo = info.substring( start, end );
+                                        console.log( "#######################################################")
                                         console.log( countInfo );
 
                                         var fromDetailStr = '住房公积金个人明细账信息';
@@ -232,6 +235,7 @@ request(optionsLogin, function (err0, httpResponse0, body0) {
                                         var start = info.indexOf( fromDetailStr,0 );
                                         var end = info.indexOf( endDetailStr,start );
                                         var detailInfo = info.substring( start, end );
+                                        console.log( "#######################################################")
                                         console.log( detailInfo );
 
 
