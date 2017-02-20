@@ -41,7 +41,7 @@ module.exports = {
 
     getCheckCode: ( checkCodeOptions ) => {
         checkCodeOptions.url += new Date();
-        console.log( checkCodeOptions.url )
+        //console.log( checkCodeOptions.url )
         return new Promise( ( resolve, reject) => {
 
             request( checkCodeOptions, ( err, response, body ) => {
