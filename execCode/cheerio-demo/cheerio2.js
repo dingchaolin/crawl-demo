@@ -123,7 +123,15 @@ $('.pear').addClass('fruit');
 $('.apple').toggleClass( 'ugly green',  true );// 第二个参数加不加 都会将新的class添加上
 
 data = $('#fruits').find('li');// 返回一个对象 有很多属性 相当于把一段html的代码用json对象表示了
+// 其中有一个length属性
+data = $('#fruits').find('li').length;// 3
 
+// parent
+data = $('.pear').parent().attr('id');// fruits
+
+data = $('.orange').parent().length ; // 1
+
+data = $('.orange').parent('#fruits').length ; // 1
 console.log( data　);
 
 
