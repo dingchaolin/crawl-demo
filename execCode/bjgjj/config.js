@@ -152,6 +152,10 @@ module.exports = {
 
     },
 
+    baseInfoAttr: ['xm', 'grdjh', 'zjlx', 'zjh', 'dwdjh', 'dwmc', 'ssglbbh', 'ssglbmc', 'dqye',
+    'zhzt', 'dnjcje', 'dntqje', 'snjzje', 'zhywrq', 'zcje'],
+
+    detailInfoAttr:['dzrq', 'hbjny', 'ywlx', 'zje', 'jse', 'ye'],
 
 
 

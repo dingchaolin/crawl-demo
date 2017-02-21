@@ -34,13 +34,13 @@ service.initCookie( config.initOptions ).then( ( cookie ) => {
     console.log( '******************用户基本信息*********************************************');
     console.log( userBasicInfo.info );
 
-    return service.getDetailInfo( config.detailsOptions, '201602', '201702', 110 );
+    return service.getDetailInfo( config.detailsOptions, '201403', '201702', 110 );
 
 }).then( detailInfo => {
     console.log( '******************用户缴费详情1********************************************');
     console.log( detailInfo.info );
 
-    return service.getDetailInfo( config.detailsOptions, '201602', '201702', 210 );
+    return service.getDetailInfo( config.detailsOptions, '201403', '201702', 210 );
 
 }).then( detailInfo => {
     console.log( '******************用户缴费详情2*********************************************');

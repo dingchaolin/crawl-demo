@@ -2,7 +2,8 @@ const request = require('request');
 const cheerio = require( 'cheerio' );
 const fs = require( 'fs' );
 const iconv = require("iconv-lite");
-
+const baseInfoAttr = require( './config.js').baseInfoAttr;
+const detailInfoAttr = require( './config.js').detailInfoAttr;
 module.exports = {
     initCookie: ( initOptions ) => {
         return new Promise( ( resolve, reject ) => {
@@ -156,30 +157,36 @@ module.exports = {
                     reject( {errStatus: 1, info: '出错了...' } );
                 }
                 else{
-                    let userData = [];
+                    // 获取用户基本信息
+                    let userData = {};
                     let data = body;//JSON.parse(body);
                     data = iconv.decode(body, 'gb2312');
                     let $ = cheerio.load( data );
-                    let info = $.text().trim().replace(/\r\n\s+/gi, "  ");
-                    //console.log( info );
-
-                    let fromStr = '住房公积金个人总账信息';
-                    let endStr = '当前余额 = 上年结转余额';
-                    let start = info.indexOf( fromStr,0 );
-                    let end = info.indexOf( endStr,start );
-                    let countInfo = info.substring( start, end );
-                    //console.log( "#######################################################")
-                    //console.log( countInfo );
-                    userData.push( countInfo );
-                    let fromDetailStr = '住房公积金个人明细账信息';
-                    let endDetailStr = '查看历史明细账信息';
-                    start = info.indexOf( fromDetailStr,0 );
-                    end = info.indexOf( endDetailStr,start );
-                    let detailInfo = info.substring( start, end );
-                    //console.log( "#######################################################")
-                    //console.log( detailInfo );
-                    userData.push( detailInfo );
-                    resolve( { errStatus: 0, info: userData } );
+                    //$('td div[align="right"]').remove();//移除不必要的数据
+                    let info = $('table[color=#0077a9] tr').children();
+                    for( let i = 0, len = info.length; i < len; i++ ){
+                        let tempData = info.eq(i).text();
+                        userData[baseInfoAttr[Math.floor(i/2)]] = tempData.trim().replace(/\s+/gi, "");;
+                    }
+                    //console.log(  userData );
+                    // 获取缴费明细
+                    info = $('#tab-style tr').children();
+                    let detailData = [];
+                    let tempDetail = {};
+                    //console.log( info.length, info );
+                    for( let i = 0, len = info.length; i < len; i++ ){
+                        let tempData = info.eq(i).text();
+                        //console.log( i, tempData.trim().replace(/\s+/gi, "") );
+                        if( i > 5 ){
+                            tempDetail[detailInfoAttr[i%6]] = tempData.trim().replace(/\s+/gi, "");
+                            if( i > 6 && i % 6 === 0 ){
+                                detailData.push( tempDetail );
+                                tempDetail = {};
+                            }
+                        }
+                    }
+                    //console.log( detailData );
+                    resolve( { errStatus: 0, info: { userBaseInfo: userData, userDetailInfo:detailData } } );
                 }
 
             } )

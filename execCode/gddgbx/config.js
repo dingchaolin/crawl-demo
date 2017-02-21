@@ -95,6 +95,11 @@ module.exports = {
 
     setCheckCode: function( imagecheck ){
         this.loginOptions.form.imagecheck = imagecheck;
-    }
+    },
+
+    baseInfoAttr: ['sbjg', 'dqcbdw', 'jbylzhbj', 'jbylzhlx', 'dfylzhbj',
+        'dfylzhlx', 'fkyhwd', 'dyjyd', 'dyjydz', 'dejydmc', 'yxsj', 'dejydz' ],
+
+    detailInfoAttr:['bh', 'dwmc', 'jfsj', 'xzlx', 'jfjs', 'dwjf', 'grjf', 'hj'],
 
 };

@@ -2,7 +2,8 @@ const request = require('request');
 const cheerio = require( 'cheerio' );
 const fs = require( 'fs' );
 const iconv = require("iconv-lite");
-
+const attr = require( './config.js' ).baseInfoAttr;
+const detailAttr = require( './config.js' ).detailInfoAttr;
 module.exports = {
     initCookie: (  initOptions ) => {
 
@@ -94,7 +95,7 @@ module.exports = {
 
                     let data = iconv.decode(body, 'gb2312');
                     data = cheerio.load( data ).text().trim().replace(/\r\n\s+/gi, "  ");;
-                    console.log( data );
+                    //console.log( data );
                     if( data.indexOf( '登录失败') != -1 ){
                         reject( {errStatus: 1, info: data } );
                     }else{
@@ -123,15 +124,24 @@ getUserBasicInfo: ( userOptions ) => {
             else{
 
                 let data = iconv.decode(body, 'gb2312');
-                let info = cheerio.load(data).text().trim().replace(/\r\n\s+/gi, "  ");
-                let fromStr = '个人基本资料查询';
-                let start = info.indexOf(fromStr, 0);
-                info = info.substring(start, info.length);
-                resolve( { errStatus: 0, info: info } );
+                let $ = cheerio.load(data);
+                let info = $('tbody tr').children();
+                let userBaseData = {};
+                for( let i = 0, len = info.length; i < len; i++ ){
+                    let tempData = info.eq(i).text().trim().replace(/\s+/gi, "");
+                    if( i < 14 ){
+                        userBaseData[attr[Math.floor( i/2 )]] = tempData;
+                    }else if( i > 14 ){
+                        userBaseData[attr[Math.floor( (i-1)/2  )]] = tempData;
+                    }
+
+                }
+                resolve( { errStatus: 0, info: userBaseData } );
+
             }
 
         });
-    })
+    });
 
 },
 
@@ -146,6 +156,10 @@ getUserBasicInfo: ( userOptions ) => {
      310   医疗保险
      410   工伤保险
      510   生育保险
+
+     //注意
+     //医疗保险只能从201310开始查询
+     //其他保险查询时间段不能超过三年
      */
     getDetailInfo: ( detailsOptions, startDate, endDate, type ) => {
         return new Promise( ( resolve, reject) => {
@@ -160,15 +174,21 @@ getUserBasicInfo: ( userOptions ) => {
                 }
                 else{
                     let data = iconv.decode(body, 'gb2312');
-                    let info = cheerio.load( data ).text().trim().replace(/\r\n\s+/gi, "  ");
-                    let fromStr = '个人参保险种缴费明细查询';
-                    let start = info.indexOf( fromStr,0 );
-                    let endDetailStr = '共有';
-                    let end = info.indexOf( endDetailStr,start );
-                    info = info.substring( start, end );
-                    resolve( { errStatus: 0, info: info } );
-                }
+                    let $ = cheerio.load( data );
+                    let info = $('tbody tr').children();
+                    let userdetailData = [];
+                    let tempDetail = {};
+                    for( let i = 0, len = info.length; i < len; i++ ){
+                        let tempData = info.eq(i).text().trim().replace(/\s+/gi, "");
+                        if( i > 0 && i % 8 === 0 ){
+                            userdetailData.push( tempDetail );
+                            tempDetail = {};
+                        }
+                        tempDetail[detailAttr[i%8]] = tempData;
+                    }
 
+                    resolve( { errStatus: 0, info: userdetailData } );
+                }
 
             } );
         })

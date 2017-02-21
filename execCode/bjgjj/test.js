@@ -38,7 +38,7 @@ service.initCookie( config.initOptions).then( cookie => {
     }
 
 }).then( ( result) => {
-    console.log( result );
+    console.log( JSON.stringify( result ) );
 }).catch( err => {
     console.log( err );
 })
